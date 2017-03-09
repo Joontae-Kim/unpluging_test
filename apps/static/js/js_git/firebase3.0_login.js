@@ -15,14 +15,14 @@ $(function() {
 // 계정생성 버튼 id - newUsr
 
 // Function called when clicking the Login/Logout button. - buttoncallback
-function toggleSignIn() { 
+function toggleSignIn() {
   console.log("click")
   if (!firebase.auth().currentUser) {
     console.log('--------- toggleSignIn --------- ')
     console.log('로그인 시도하는 유저')
-    var provider = new firebase.auth.FacebookAuthProvider(); //createprovider
+    var provider = new firebase.auth.FacebookAuthProvider(); //Facebook-Auth-Provider
     provider.addScope('user_likes'); // addscopes
-    firebase.auth().signInWithRedirect(provider); // signin redirect
+    firebase.auth().signInWithRedirect(provider); // sign-in redirect
   } else {
     console.log('이미 로그인 한 유저')
     firebase.auth().signOut(); // signout
@@ -39,10 +39,8 @@ function initApp() {
   firebase.auth().getRedirectResult().then(function(result) {
     if (result.credential) {
       var token = result.credential.accessToken; // get a Facebook Access Token. for accessing the Facebook API.
-      // $('#quickstart-oauthtoken').text(token);
       console.log('result.credential oauthtoken = ' + token)
     } else {
-      // $('#quickstart-oauthtoken').text('null');
       console.log('result.credential oauthtoken = null')
     }
     var user = result.user; // The signed-in user information.
@@ -68,28 +66,20 @@ function initApp() {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log('--------- onAuthStateChanged --------- ')
     if (user) {
+
       // User is signed in.
       // i.e) get a user's data - user.xxxxxx
       // user.displayName, user.email, user.emailVerified,
       // user.isAnonymous, user.uid, user.providerData
 
-      // $('#quickstart-sign-in-status').text('Signed in');
-      // $('#quickstart-sign-in').text('Log out');
-      // $('#quickstart-account-details').text(JSON.stringify(user, null, '  '));
-
-      // console.log('signed-in')
-      // console.log('next step : Log out')
+      console.log('signed-in')
+      console.log('next step : Log out')
       // console.log(JSON.stringify(user, null, '  '))
-      setTimeout(function() {
-         window.location.replace("/");
-      }, 2000);
+      // setTimeout(function() {
+      //    window.location.replace("/");
+      // }, 2000);
     } else {
       // User is signed out.
-      // $('#quickstart-sign-in-status').text('Signed out');
-      // $('#quickstart-sign-in').text('Log in with Facebook');
-      // $('#quickstart-account-details').text('null');
-      // $('#quickstart-oauthtoken').text('null');
-
       console.log('sign-in-status : Signed out')
       console.log('Log in with Facebook')
       console.log('account-details : null')
@@ -100,6 +90,7 @@ function initApp() {
   // authstatelistener end
   // $('#btnFacebookLogin').unbind("click", toggleSignIn, false);
   $('#btnFacebookLogin').click(toggleSignIn);
+  // document.getElementById('btnFacebookLogin').addEventListener('click', toggleSignIn, false);
   console.log('click')
 }
 
