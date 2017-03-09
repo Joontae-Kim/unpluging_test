@@ -32,7 +32,7 @@ function toggleSignIn() {
 
 // initApp() handles setting up UI event listeners and registering Firebase auth listeners:
 function initApp() {
- // firebase.auth().getRedirectResult(): This promise completes when the user gets back from the auth redirect flow.
+ // firebase.auth().getRedirectResult() : completes when the user gets back from the auth redirect flow.
  // It is where you can get the OAuth access token from the IDP.
  // Result from Redirect auth flow.  - getidptoken
  console.log('--------- initApp --------- ')
@@ -40,6 +40,7 @@ function initApp() {
     if (result.credential) {
       var token = result.credential.accessToken; // get a Facebook Access Token. for accessing the Facebook API.
       console.log('result.credential oauthtoken = ' + token)
+
     } else {
       console.log('result.credential oauthtoken = null')
     }
@@ -60,9 +61,8 @@ function initApp() {
     }
   });
 
-  // firebase.auth().onAuthStateChanged - This listener is called when the user is signed in or out,
-  // and that is where we update the UI.
-  // Listening for auth state changes. - authstatelistener
+  // firebase.auth().onAuthStateChanged : is called update page's UI when the user is signed in or out.
+  // Listening for auth state changes.
   firebase.auth().onAuthStateChanged(function(user) {
     console.log('--------- onAuthStateChanged --------- ')
     if (user) {
@@ -88,7 +88,6 @@ function initApp() {
     $('#btnFacebookLogin').attr('disabled',false);
   });
   // authstatelistener end
-  // $('#btnFacebookLogin').unbind("click", toggleSignIn, false);
   $('#btnFacebookLogin').click(toggleSignIn);
   // document.getElementById('btnFacebookLogin').addEventListener('click', toggleSignIn, false);
   console.log('click')
