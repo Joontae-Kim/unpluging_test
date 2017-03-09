@@ -1,13 +1,16 @@
-    /**
-     * Function called when clicking the Login/Logout button.
-     */
-    function toggleSignIn() { // buttoncallback
+    // Function called when clicking the Login/Logout button.
+    // buttoncallback
+    function toggleSignIn() { 
       if (!firebase.auth().currentUser) {
-        var provider = new firebase.auth.FacebookAuthProvider(); //createprovider
-        provider.addScope('user_likes'); // addscopes
-        firebase.auth().signInWithRedirect(provider); // signin
+        //createprovider
+        var provider = new firebase.auth.FacebookAuthProvider(); 
+        // addscopes
+        provider.addScope('user_likes');
+        // signin
+        firebase.auth().signInWithRedirect(provider);
       } else {
-        firebase.auth().signOut(); // signout
+        // signout
+        firebase.auth().signOut(); 
       }
       $('#quickstart-sign-in').attr('disabled',false)
     }
@@ -16,33 +19,39 @@
     function initApp() {
      // firebase.auth().getRedirectResult(): This promise completes when the user gets back from the auth redirect flow.
      // It is where you can get the OAuth access token from the IDP.
-      firebase.auth().getRedirectResult().then(function(result) { // Result from Redirect auth flow.  [START getidptoken]
+     // Result from Redirect auth flow.  - getidptoken
+      firebase.auth().getRedirectResult().then(function(result) {
         if (result.credential) {
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          // get a Facebook Access Token. for accessing the Facebook API.
           var token = result.credential.accessToken;
           $('#quickstart-oauthtoken').text(token);
         } else {
           $('#quickstart-oauthtoken').text('null');
         }
-        var user = result.user; // The signed-in user info.
-      }).catch(function(error) { // Handle Errors here.
+        // The signed-in user information.
+        var user = result.user;
+
+        // Handle Errors here.
+      }).catch(function(error) { 
         var errorCode = error.code;
         var errorMessage = error.message;
-        var email = error.email; // The email of the user's account used.
-        var credential = error.credential; // The firebase.auth.AuthCredential type that was used.
-        // [START_EXCLUDE]
+
+        // The email of the user's account used.
+        var email = error.email;
+
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential; 
         if (errorCode === 'auth/account-exists-with-different-credential') {
           alert('You have already signed up with a different auth provider for that email.');
-          // If you are using multiple auth providers on your app you should handle linking
-          // the user's accounts here.
+          // If you are using multiple auth providers on your app you should handle linking the user's accounts here.
         } else {
           console.error(error);
         }
       });
 
-      // firebase.auth().onAuthStateChanged: This listener is called when the user is signed in or out,
+      // firebase.auth().onAuthStateChanged - This listener is called when the user is signed in or out,
       // and that is where we update the UI.
-      // Listening for auth state changes. [START authstatelistener]
+      // Listening for auth state changes. - authstatelistener
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           // User is signed in.
@@ -63,7 +72,6 @@
           $('#quickstart-account-details').text('null');
           $('#quickstart-oauthtoken').text('null');
         }
-        // document.getElementById('quickstart-sign-in').disabled = false;
         $('#quickstart-sign-in').attr('disabled',false);
       });
       // authstatelistener end
