@@ -1,58 +1,35 @@
     /**
      * Function called when clicking the Login/Logout button.
      */
-    // [START buttoncallback]
-    function toggleSignIn() {
+    function toggleSignIn() { // buttoncallback
       if (!firebase.auth().currentUser) {
-        // [START createprovider]
-        var provider = new firebase.auth.FacebookAuthProvider();
-        // [END createprovider]
-        // [START addscopes]
-        provider.addScope('user_likes');
-        // [END addscopes]
-        // [START signin]
-        firebase.auth().signInWithRedirect(provider);
-        // [END signin]
+        var provider = new firebase.auth.FacebookAuthProvider(); //createprovider
+        provider.addScope('user_likes'); // addscopes
+        firebase.auth().signInWithRedirect(provider); // signin
       } else {
-        // [START signout]
-        firebase.auth().signOut();
-        // [END signout]
+        firebase.auth().signOut(); // signout
       }
-      // [START_EXCLUDE]
-      document.getElementById('quickstart-sign-in').disabled = true;
-      // [END_EXCLUDE]
+      $('#quickstart-sign-in').attr('disabled',false)
     }
-    // [END buttoncallback]
-    /**
-     * initApp handles setting up UI event listeners and registering Firebase auth listeners:
-     *  - firebase.auth().onAuthStateChanged: This listener is called when the user is signed in or
-     *    out, and that is where we update the UI.
-     *  - firebase.auth().getRedirectResult(): This promise completes when the user gets back from
-     *    the auth redirect flow. It is where you can get the OAuth access token from the IDP.
-     */
+
+    // initApp() handles setting up UI event listeners and registering Firebase auth listeners:
     function initApp() {
-      // Result from Redirect auth flow.
-      // [START getidptoken]
-      firebase.auth().getRedirectResult().then(function(result) {
+     // firebase.auth().getRedirectResult(): This promise completes when the user gets back from the auth redirect flow.
+     // It is where you can get the OAuth access token from the IDP.
+      firebase.auth().getRedirectResult().then(function(result) { // Result from Redirect auth flow.  [START getidptoken]
         if (result.credential) {
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
           var token = result.credential.accessToken;
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-oauthtoken').textContent = token;
+          $('#quickstart-oauthtoken').text(token);
         } else {
-          document.getElementById('quickstart-oauthtoken').textContent = 'null';
-          // [END_EXCLUDE]
+          $('#quickstart-oauthtoken').text('null');
         }
-        // The signed-in user info.
-        var user = result.user;
-      }).catch(function(error) {
-        // Handle Errors here.
+        var user = result.user; // The signed-in user info.
+      }).catch(function(error) { // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
+        var email = error.email; // The email of the user's account used.
+        var credential = error.credential; // The firebase.auth.AuthCredential type that was used.
         // [START_EXCLUDE]
         if (errorCode === 'auth/account-exists-with-different-credential') {
           alert('You have already signed up with a different auth provider for that email.');
@@ -61,40 +38,35 @@
         } else {
           console.error(error);
         }
-        // [END_EXCLUDE]
       });
-      // [END getidptoken]
-      // Listening for auth state changes.
-      // [START authstatelistener]
+
+      // firebase.auth().onAuthStateChanged: This listener is called when the user is signed in or out,
+      // and that is where we update the UI.
+      // Listening for auth state changes. [START authstatelistener]
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           // User is signed in.
-          var displayName = user.displayName;
+          var displayName = user.displayName; 
           var email = user.email;
           var emailVerified = user.emailVerified;
           var photoURL = user.photoURL;
           var isAnonymous = user.isAnonymous;
           var uid = user.uid;
           var providerData = user.providerData;
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-          document.getElementById('quickstart-sign-in').textContent = 'Log out';
-          document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-          // [END_EXCLUDE]
+          $('#quickstart-sign-in-status').text('Signed in');
+          $('#quickstart-sign-in').text('Log out');
+          $('#quickstart-account-details').text(JSON.stringify(user, null, '  '));
         } else {
           // User is signed out.
-          // [START_EXCLUDE]
-          document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-          document.getElementById('quickstart-sign-in').textContent = 'Log in with Facebook';
-          document.getElementById('quickstart-account-details').textContent = 'null';
-          document.getElementById('quickstart-oauthtoken').textContent = 'null';
-          // [END_EXCLUDE]
+          $('#quickstart-sign-in-status').text('Signed out');
+          $('#quickstart-sign-in').text('Log in with Facebook');
+          $('#quickstart-account-details').text('null');
+          $('#quickstart-oauthtoken').text('null');
         }
-        // [START_EXCLUDE]
-        document.getElementById('quickstart-sign-in').disabled = false;
-        // [END_EXCLUDE]
+        // document.getElementById('quickstart-sign-in').disabled = false;
+        $('#quickstart-sign-in').attr('disabled',false);
       });
-      // [END authstatelistener]
+      // authstatelistener end
       document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
     }
     window.onload = function() {
