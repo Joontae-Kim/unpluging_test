@@ -1,5 +1,1 @@
-1. app.yaml¿¡ application ÀÌ¸§ µî·Ï
-2. apps/settings.py¿¡ SECRET_KEY, ADMIN, SQLALCHEMY_DATABASE_URI ¼öÁ¤
-3. models.py¿¡ class ¼öÁ¤
-4. cmd¿¡¼­ Æú´õ À§Ä¡·Î ÀÌµ¿ ÈÄ python manger.py db init / python manager.py db migrate / python manager.py db upgrade
-* such no revision ¶ß¸é drop alembic_version 
+1.unplugin í…ŒìŠ¤íŠ¸ ì„œë²„ìš©
