@@ -1,7 +1,10 @@
-$(function() {  
+$(function() {
   initApp();
   btmSetting();
 });
+
+// 페이스북 로그인 버튼 id - btnFacebookLogin // 구글 로그인 버튼 id - btnGoogleLogin // 이메일 로그인 버튼 id - btnLogin
+// 로그아웃 버튼 id - usrslogout // 계정생성 버튼 id - newUsr
 
 function email_SignIn() {
   if (firebase.auth().currentUser) {
@@ -129,16 +132,35 @@ function initApp() {
   firebase.auth().onAuthStateChanged(function(user) {
     console.log('--------- onAuthStateChanged --------- ')
     if (user) {
+      // 로그인 상태, 유저 데이터 불러오기 - i.e) user.xxx
       console.log('signed-in')
       console.log('next step : Log out')
+
       var user = firebase.auth().currentUser;
       if (user != null) {
         user.providerData.forEach(function (profile) {
-          console.log("Email: "+profile.email);
-          console.log("Provider-specific UID (same a previous ID): "+profile.uid);
-          console.log("Name: "+profile.displayName);
-          console.log("Sign-in provider: "+profile.providerId);
-          console.log('User UID = ' + user.uid)
+          // console.log("Email: "+profile.email);
+          // console.log("Provider-specific UID (same a previous ID): "+profile.uid);
+          // console.log("Name: "+profile.displayName);
+          // console.log("Sign-in provider: "+profile.providerId);
+          // console.log('User UID = ' + user.uid)
+          var ref = firebase.database().ref("users/"+user.uid);
+          ref.once("value")
+            .then(function(snapshot) {
+              var user_exists = snapshot.exists();
+              if (!user_exists) {
+                function writeUserData(userId, name, email, imageUrl) {
+                  firebase.database().ref('users/' + user.uid).set({
+                    email: email,
+                    id: profile.uid,
+                    name: profile.displayName,
+                    provider: profile.providerId,
+                    uid: user.uid
+                  });
+                }
+              }
+          })
+
         });
       }
     } else {
@@ -150,7 +172,6 @@ function initApp() {
   }); 
   // authstatelistener end
   console.log('initApp - End')
-  // [페이스북 로그인 버튼]에 [페이스북 로그인 함수] 할당
   $('#btnFacebookLogin').click(facebook_SignIn);
   $('#btnGoogleLogin').click(google_SignIn);
   $('#btnLogin').click(email_SignIn);
